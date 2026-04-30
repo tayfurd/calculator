@@ -41,7 +41,7 @@ numbers.forEach((number) => {
         result[result.length - 1].number += `${e.target.textContent}`;
 
         displayResult[displayResult.length - 1] += e.target.textContent;
-        display.textContent = [displayResult];
+        display.textContent = [displayResult.join(" ")];
     });
 });
 
@@ -53,7 +53,7 @@ operators.forEach((operator) => {
         displayResult.push([`${e.target.textContent}`]);
         result.push( {number: ""} );
         displayResult.push( [] );
-        display.textContent = [displayResult.join()];
+        display.textContent = [displayResult.join(" ")];
     });
 });
 
@@ -93,8 +93,7 @@ function getResult() {
                 );
             }
             else if (result.length === 1) {
-                console.log(result[0]["number"])
-                displaySecond.textContent = result[0]["number"]
+                displaySecond.textContent = Number(result[0]["number"]).toFixed(10)
             }
     };
 };
