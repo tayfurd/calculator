@@ -1,4 +1,3 @@
-let operateResult = ""
 function addOperator(a, b){
     return a + b
 };
@@ -15,8 +14,6 @@ function divideOperator(a, b) {
 };
 
 function operate(operator, a, b) {
-    // takes an operator and two numbers
-    // calls one of operate functions 
     switch(operator) {
         case ("addOperator"): 
             return addOperator(a, b)
@@ -34,13 +31,14 @@ function operate(operator, a, b) {
 };
 
 const display = document.querySelector("#display");
+const displaySecond = document.querySelector("#displaySecond");
 let displayResult = [ [] ];
 let result = [ {number: ""} ];
 
 const numbers = document.querySelectorAll(".number");
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
-        result[result.length - 1].number += e.target.textContent;
+        result[result.length - 1].number += `${e.target.textContent}`;
 
         displayResult[displayResult.length - 1] += e.target.textContent;
         display.textContent = [displayResult];
@@ -63,15 +61,6 @@ const equal = document.querySelector("#equal");
 equal.addEventListener("click", (e) => {
     return getResult()
 })
-
-/* 
-make the calculation
-delete it and replace it
-    2 + 2 - (2 * 3)
-    2*3, replace it with 6
-        2 + 2 - (6)
-keep calculate until cloneResult.length = 1
-*/
 
 function getResult() {
     for(let i = result.length; i >= 1 ; i--){
@@ -103,6 +92,57 @@ function getResult() {
                     {number: `${operate(operator, a, b)}`}
                 );
             }
-            else if (result.length === 1) {console.log(result[0]["number"])}
+            else if (result.length === 1) {
+                console.log(result[0]["number"])
+                displaySecond.textContent = result[0]["number"]
+            }
     };
 };
+
+
+/* 
+How to calculate multiple variables?
+
+later: 
+    do not let click 2 operator in a row.
+    join displayResult properly
+    calculate priority -> divide and multiply first 
+    exact numbers
+,
+
+show displayResult as the display:
+
+in an array:
+initially create 1 object
+assign the digits the last object
+push digits the last array
+
+when click an operator,
+create an object, and assign the operator,
+create another object for the next digits to assign them
+create an array in displayResult
+
+when press equal
+call operate(operator, a, b)
+find the first operator in the array
+operator = operator value of index of the operator
+        a = operator index - 1 
+        b = operator index + 1
+
+calculate the result
+update the display with the result
+
+
+make the calculation
+delete it and replace it
+    2 + 2 - (2 * 3)
+    2*3, replace it with 6
+        2 + 2 - (6)
+keep calculating until cloneResult.length = 1
+*/
+
+
+
+
+
+
