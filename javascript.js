@@ -32,28 +32,85 @@ function operate(operator, a, b) {
 
 const display = document.querySelector("#display");
 const displaySecond = document.querySelector("#displaySecond");
-let displayResult = [ [] ];
-let result = [ {number: ""} ];
+let displayResult = [ [0] ];
+let result = [ {number: "0"} ];
+display.textContent = [displayResult.join(" ")];
 
+const decimalPoint = document.querySelector("#decimalPoint");
 const numbers = document.querySelectorAll(".number");
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
-        result[result.length - 1].number += `${e.target.textContent}`;
 
-        displayResult[displayResult.length - 1] += e.target.textContent;
-        display.textContent = [displayResult.join(" ")];
+        // if last object includes operator key, add object and array to input
+        if (Object.keys(result[result.length-1]).includes("operator")) 
+            {
+                result.push( {number: ""} );
+                displayResult.push( [] );
+                display.textContent = [displayResult.join(" ")];
+            }
+
+        if (e.target.id == "decimalPoint" && 
+            result[result.length - 1].number.at(-1) !== "." &&
+            !result[result.length - 1].number.includes(".") &&
+            result[result.length - 1].number !== "")
+            {
+                result[result.length - 1].number += `${e.target.textContent}`;
+                displayResult[displayResult.length - 1] += e.target.textContent; 
+            }
+            
+
+            else if (result.length == 1 && 
+                    result[result.length - 1].number.length == 1 &&
+                    result[result.length - 1].number.at(0) === "0") 
+                {
+                    result = [ {number: e.target.textContent} ];
+                    displayResult = [ [e.target.textContent] ];
+                }
+
+            else if (e.target.id == "zero" &&
+                result[result.length - 1].number.includes(".") ||
+                e.target.id == "zero" && 
+                result[result.length - 1].number.at(0) !== "0") 
+                {
+                    result[result.length - 1].number += `${e.target.textContent}`;
+                    displayResult[displayResult.length - 1] += e.target.textContent;
+                }
+
+            else if(e.target.id !== "decimalPoint" && 
+                    e.target.id !== "zero" && 
+                    result[result.length - 1].number.includes(".") ||
+
+                    e.target.id !== "decimalPoint" && 
+                    e.target.id !== "zero" &&
+                    result[result.length - 1].number.at(0) == "0" && 
+                    result[result.length - 1].number.length !== 1 ||
+
+                    e.target.id !== "decimalPoint" && 
+                    e.target.id !== "zero" &&
+                    result[result.length - 1].number.at(0) !== "0"
+                    ) 
+                {
+                    result[result.length - 1].number += `${e.target.textContent}`;
+                    displayResult[displayResult.length - 1] += e.target.textContent;
+                }
+
+    display.textContent = [displayResult.join(" ")];
+    displaySecond.textContent = ""
     });
 });
-
 
 const operators = document.querySelectorAll(".operator");
 operators.forEach((operator) => {
     operator.addEventListener("click", (e) => {
-        result.push({operator: `${e.target.id}`});
-        displayResult.push([`${e.target.textContent}`]);
-        result.push( {number: ""} );
-        displayResult.push( [] );
-        display.textContent = [displayResult.join(" ")];
+        if (Object.keys(result[result.length-1]) == "operator"){
+
+        }
+        else {
+            result.push({operator: `${e.target.id}`});
+            displayResult.push([`${e.target.textContent}`]);
+            display.textContent = [displayResult.join(" ")];
+        }
+        displaySecond.textContent = ""
     });
 });
 
@@ -91,57 +148,67 @@ function getResult() {
                     (3), 
                     {number: `${operate(operator, a, b)}`}
                 );
+            };
+            if (result.length === 1 && !result[0].number.includes(".")) {
+                displaySecond.textContent = result[0]["number"];
             }
-            else if (result.length === 1) {
-                displaySecond.textContent = Number(result[0]["number"]).toFixed(10)
-            }
+
+               else if(result.length === 1 
+                && result[0].number.includes(".")) 
+                    {
+                        let indexOfDecimal = result[0].number.indexOf(".");
+                        let beforeDecimal = result[0]["number"].slice(0, indexOfDecimal);
+                        let afterDecimal = result[0]["number"].slice(indexOfDecimal, indexOfDecimal+4)
+                        console.log(beforeDecimal)
+                        displaySecond.textContent = beforeDecimal + afterDecimal
+                    }
     };
 };
 
-
-/* 
-How to calculate multiple variables?
-
-later: 
-    do not let click 2 operator in a row.
-    join displayResult properly
-    calculate priority -> divide and multiply first 
-    exact numbers
-,
-
-show displayResult as the display:
-
-in an array:
-initially create 1 object
-assign the digits the last object
-push digits the last array
-
-when click an operator,
-create an object, and assign the operator,
-create another object for the next digits to assign them
-create an array in displayResult
-
-when press equal
-call operate(operator, a, b)
-find the first operator in the array
-operator = operator value of index of the operator
-        a = operator index - 1 
-        b = operator index + 1
-
-calculate the result
-update the display with the result
+const c = document.querySelector("#c");
+c.addEventListener("click", (e) => {
+    displayResult = [ [0] ];
+    result = [ {number: "0"} ];
+    displaySecond.textContent = "";
+    display.textContent = "0";
+});
 
 
-make the calculation
-delete it and replace it
-    2 + 2 - (2 * 3)
-    2*3, replace it with 6
-        2 + 2 - (6)
-keep calculating until cloneResult.length = 1
-*/
+function clearEntry(e){
+    const lastObject = result[result.length - 1];
+    const lastKey = Object.keys(lastObject).at(-1)
+    const lastArray = displayResult.length - 1;
 
+    if (displayResult[lastArray] == "") {
+        displayResult.pop()
+    };
+    if (lastKey == "operator") 
+        {
+            result.pop(lastObject);
+            displayResult.pop();
+        }
+        else if (lastKey == "number") {
+                const lastArray = displayResult.length - 1;
+                lastObject[lastKey] = lastObject[lastKey].slice(0, -1)
+                displayResult[lastArray] = displayResult[lastArray].slice(0 , -1)
+            };
+    if (result.length == 1 && Object.values(lastObject).at(-1) == "") {
+        displayResult = [ [0] ];
+        result = [ {number: "0"} ];
+    }
 
+    display.textContent = [displayResult.join(" ")];
+    displaySecond.textContent = ""
+}
 
+const ce = document.querySelector("#ce");
+ ce.addEventListener("click", (e) => {
+    clearEntry(e);
+})
 
-
+window.addEventListener("keydown", (e) => {
+    if (e.key == "Backspace") {
+        clearEntry(e);
+    }
+})
 
