@@ -48,8 +48,8 @@ function addObjectArray(e) {
             result.push( {number: ""} );
             displayResult.push( [] );
             display.textContent = [displayResult.join(" ")];
-        }
-}
+        };
+};
 
 function isDecimalPoint(e) {
     if (e.target.id == "decimalPoint" && 
@@ -59,8 +59,8 @@ function isDecimalPoint(e) {
     {
         lastObject().number += `${e.target.textContent}`;
         displayResult[displayResult.length - 1] += e.target.textContent; 
-    }
-}
+    };
+};
 
 function isOneToNine(e) {
     if (result.length == 1 && 
@@ -83,8 +83,8 @@ function isOneToNine(e) {
         {
             lastObject().number += `${e.target.textContent}`;
             displayResult[displayResult.length - 1] += e.target.textContent;
-        }
-}
+        };
+};
 
 function isZero(e) {
     if (e.target.id == "zero" &&
@@ -94,8 +94,8 @@ function isZero(e) {
     {
         lastObject().number += `${e.target.textContent}`;
         displayResult[displayResult.length - 1] += e.target.textContent;
-    }
-}
+    };
+};
 
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
@@ -108,9 +108,7 @@ numbers.forEach((number) => {
     });
 });
 
-const operators = document.querySelectorAll(".operator");
-operators.forEach((operator) => {
-    operator.addEventListener("click", (e) => {
+function isOperator(e) {
         if (Object.keys(lastObject()) == "operator"){
 
         }
@@ -118,29 +116,33 @@ operators.forEach((operator) => {
             result.push({operator: `${e.target.id}`});
             displayResult.push([`${e.target.textContent}`]);
             display.textContent = [displayResult.join(" ")];
-        }
+        };
+};
+
+const operators = document.querySelectorAll(".operator");
+operators.forEach((operator) => {
+    operator.addEventListener("click", (e) => {
+        isOperator(e);
         displaySecond.textContent = ""
     });
 });
 
-const equal = document.querySelector("#equal");
-equal.addEventListener("click", (e) => {
-    return getResult()
-})
-
 function getResult() {
-    for(let i = result.length; i >= 1 ; i--){
-        let findMultiplyDivide = result.map((obj) => {
+    const resultClone = structuredClone(result)
+
+    for(let i = resultClone.length; i >= 1 ; i--) {
+
+        let findMultiplyDivide = resultClone.map((obj) => {
             return obj.operator === "divideOperator" 
             || obj.operator === "multiplyOperator"
         });
 
         if (findMultiplyDivide.includes(true)){
             let findOperator = findMultiplyDivide.indexOf(true);
-            let operator = result[findOperator].operator;
-            let a = Number(result[(findOperator - 1)]["number"]);
-            let b = Number(result[(findOperator + 1)]["number"]);
-            result.splice(
+            let operator = resultClone[findOperator].operator;
+            let a = Number(resultClone[(findOperator - 1)]["number"]);
+            let b = Number(resultClone[(findOperator + 1)]["number"]);
+            resultClone.splice(
                 (findOperator-1), 
                 (3), 
                 {number: `${operate(operator, a, b)}`}
@@ -148,31 +150,34 @@ function getResult() {
         }
             else if (!findMultiplyDivide.includes(true) &&
                     findMultiplyDivide.length > 1) {
-                let findOperator = result.findIndex((obj) => obj.operator);
-                let operator = result[findOperator].operator;
-                let a = Number(result[findOperator - 1]["number"]);
-                let b = Number(result[findOperator + 1]["number"])
-                result.splice(
+                let findOperator = resultClone.findIndex((obj) => obj.operator);
+                let operator = resultClone[findOperator].operator;
+                let a = Number(resultClone[findOperator - 1]["number"]);
+                let b = Number(resultClone[findOperator + 1]["number"])
+                resultClone.splice(
                     (findOperator-1), 
                     (3), 
                     {number: `${operate(operator, a, b)}`}
                 );
             };
-            if (result.length === 1 && !result[0].number.includes(".")) {
-                displaySecond.textContent = result[0]["number"];
+            if (resultClone.length === 1 && !resultClone[0].number.includes(".")) {
+                displaySecond.textContent = resultClone[0]["number"];
             }
 
-               else if(result.length === 1 
-                && result[0].number.includes(".")) 
+               else if(resultClone.length === 1 
+                && resultClone[0].number.includes(".")) 
                     {
-                        let indexOfDecimal = result[0].number.indexOf(".");
-                        let beforeDecimal = result[0]["number"].slice(0, indexOfDecimal);
-                        let afterDecimal = result[0]["number"].slice(indexOfDecimal, indexOfDecimal+4)
-                        console.log(beforeDecimal)
+                        let indexOfDecimal = resultClone[0].number.indexOf(".");
+                        let beforeDecimal = resultClone[0]["number"].slice(0, indexOfDecimal);
+                        let afterDecimal = resultClone[0]["number"].slice(indexOfDecimal, indexOfDecimal+4)
                         displaySecond.textContent = beforeDecimal + afterDecimal
                     }
     };
 };
+const equal = document.querySelector("#equal");
+equal.addEventListener("click", (e) => {
+    return getResult()
+});
 
 const c = document.querySelector("#c");
 c.addEventListener("click", (e) => {
@@ -204,20 +209,170 @@ function clearEntry(e){
     if (result.length == 1 && Object.values(lastObject()).at(-1) == "") {
         displayResult = [ [0] ];
         result = [ {number: "0"} ];
-    }
+    };
 
     display.textContent = [displayResult.join(" ")];
     displaySecond.textContent = ""
-}
+};
 
 const ce = document.querySelector("#ce");
  ce.addEventListener("click", (e) => {
     clearEntry(e);
-})
+});
+
+function isOneToNineKey(e) {
+    if (result.length == 1 && 
+        lastObject().number.length == 1 &&
+        lastObject().number.at(0) === "0") 
+    {
+        result = [ {number: e.key} ];
+        displayResult = [ [e.key] ];
+    }
+        else if(lastObject().number.includes(".") ||
+
+            lastObject().number.at(0) == "0" && 
+            lastObject().number.length !== 1 ||
+
+            lastObject().number.at(0) !== "0"
+            ) 
+        {
+            lastObject().number += `${e.key}`;
+            displayResult[displayResult.length - 1] += e.key;
+        };
+};
+
+function isDecimalPointKey(e) {
+    if (!lastObject().number.includes(".") &&
+        lastObject().number !== "")
+    {
+        lastObject().number += `${e.key}`;
+        displayResult[displayResult.length - 1] += e.key; 
+    };
+};
+
+function isZeroKey(e) {
+    if (lastObject().number.includes(".") ||
+        lastObject().number.at(0) !== "0") 
+    {
+        lastObject().number += `${e.key}`;
+        displayResult[displayResult.length - 1] += e.key;
+    };
+};
+
+const showDisplay = () => {
+    display.textContent = [displayResult.join(" ")];
+    displaySecond.textContent = ""
+}
 
 window.addEventListener("keydown", (e) => {
     if (e.key == "Backspace") {
         clearEntry(e);
     }
-})
+    else if (e.key == "1") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
 
+    }
+    else if (e.key == "2") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "3") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "4") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "5") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "6") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "7") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "8") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    else if (e.key == "9") {
+        addObjectArray(e);
+        isOneToNineKey(e);
+        showDisplay();
+    }
+    
+    else if (e.key == ".") {
+        isDecimalPointKey(e)
+        showDisplay();
+    }
+    else if (e.key == "0") {
+        addObjectArray(e);
+        isZeroKey(e);
+        showDisplay();
+    }
+    else if (e.key == "Enter") {
+        return getResult();
+    }
+
+    else if (e.key == "+") {
+        if (Object.keys(lastObject()) == "operator"){
+
+        }
+        else {
+            result.push({operator: `addOperator`});
+            displayResult.push([`+`]);
+            display.textContent = [displayResult.join(" ")];
+            displaySecond.textContent = ""
+        };
+    }
+
+    else if (e.key == "-") {
+        if (Object.keys(lastObject()) == "operator"){
+
+        }
+        else {
+            result.push({operator: `subtractOperator`});
+            displayResult.push([`-`]);
+            display.textContent = [displayResult.join(" ")];
+            displaySecond.textContent = ""
+        };
+    }
+
+    else if (e.key == "*") {
+        if (Object.keys(lastObject()) == "operator"){
+
+        }
+        else {
+            result.push({operator: `multiplyOperator`});
+            displayResult.push(['×']);
+            display.textContent = [displayResult.join(" ")];
+            displaySecond.textContent = ""
+        };
+    }
+    
+    else if (e.key == "/") {
+        if (Object.keys(lastObject()) == "operator"){
+
+        }
+        else {
+            result.push({operator: `divideOperator`});
+            displayResult.push([`÷`]);
+            display.textContent = [displayResult.join(" ")];
+            displaySecond.textContent = ""
+        };
+    }
+});
