@@ -1,0 +1,155 @@
+body {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+*, *::before, *::after {
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+#displayContainer {
+    display: flex;
+    flex-direction: column;
+    height: 75px;
+    align-items: flex-end;
+    border: 3px solid;
+    padding: 8px;
+    overflow: hidden;
+}
+
+#displaySecond {
+    justify-content: flex-start;
+    height: 35%;
+    font-size: 18px;
+    color: #3a3a3a;
+}
+#display {
+    justify-content: flex-end;
+    height: 65%;
+    font-size: 30px;
+
+}
+
+#displaySecond, #display {
+    padding: 5px;
+}
+
+
+
+.calculator-container {
+    display: flex;
+    border: 3px solid;
+    flex-direction: column;
+    flex: 0 1 auto;
+    width: 400px;
+    padding: 25px;
+    gap: 25px;
+    background-color: rgba(211, 211, 211, 0.199);
+}
+
+button {
+    width: 100px;
+    height: 60px;
+    border-radius: 100px;
+    background-color: #8cd5ff36;
+}
+.operator {
+    background-color: #8cd5ff5d;
+}
+.input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.input-container > button {
+    width: calc(1/4 * 100% - 6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 16;
+    font-weight: 600;
+}
+#c {
+   order: 1;
+   background-color: #FA6868;
+   color: white;
+}
+
+#ce {
+    order: 2;
+    width: calc(2/4 * 100% - 6px);
+    background-color: #FA6868;
+    color: white;
+}
+
+#equal {
+    order: 18;
+    width: calc(2/4 * 100% - 6px);
+    background-color: #84bbffbd;
+}
+
+
+#divideOperator {
+    order: 3
+}
+
+#seven {
+    order: 4
+}
+
+#eight {
+    order: 5
+}
+
+#nine {
+    order: 6
+}
+
+#multiplyOperator {
+    order:7
+}
+
+#four {
+    order:8
+}
+
+#five {
+    order: 9
+}
+
+#six {
+    order: 10
+}
+
+#subtractOperator {
+    order: 11
+}
+
+#one {
+    order: 12
+}
+
+#two {
+    order: 13
+}
+
+#three {
+    order: 14
+}
+
+#addOperator {
+    order: 15
+}
+
+#zero {
+    order: 17
+}
+#decimalPoint {
+    order: 16;
+}
+
+

@@ -8,30 +8,33 @@
     <script src="./javascript.js" defer></script>
 </head>
 <body>
-    <div>
+    <div class="calculator-container">
         <div id="displayContainer">
-            <div id="displaySecond"></div>
-            <div id="display"></div>
+            <div id="displaySecond" class="display"></div>
+            <div id="display" class="display"></div>
         </div>
-        
-        <button id="addOperator" class="operator">+</button>
-        <button id="subtractOperator" class="operator">-</button>
-        <button id="divideOperator" class="operator"> &divide;</button>
-        <button id="multiplyOperator" class="operator">&times;</button>
-        <button id="equal">=</button>
-        <button id="c">C</button>
-        <button id="ce">CE</button>
-        <button id="zero" class="number zero">0</button>
-        <button id="one" class="number oneToNine" value="1">1</button>
-        <button id="two" class="number oneToNine">2</button>
-        <button id="three" class="number oneToNine">3</button>
-        <button id="four" class="number oneToNine">4</button>
-        <button id="five" class="number oneToNine">5</button>
-        <button id="six" class="number oneToNine">6</button>
-        <button id="seven" class="number oneToNine">7</button>
-        <button id="eight" class="number oneToNine">8</button>
-        <button id="nine" class="number oneToNine">9</button>
-        <button id="decimalPoint" class="number">.</button>
+        <div class="input-container">
+                <button id="c">C</button>
+                <button id="ce">CE</button>
+                <button id="nine" class="number oneToNine">9</button>
+                <button id="eight" class="number oneToNine">8</button>
+                <button id="seven" class="number oneToNine">7</button>
+                <button id="six" class="number oneToNine">6</button>
+                <button id="five" class="number oneToNine">5</button>
+                <button id="four" class="number oneToNine">4</button>
+                <button id="three" class="number oneToNine">3</button>
+                <button id="two" class="number oneToNine">2</button>
+                <button id="one" class="number oneToNine" value="1">1</button>
+                <button id="zero" class="number zero">0</button>
+                <button id="decimalPoint" class="number">.</button>
+                <button id="equal">=</button>
+                <button id="addOperator" class="operator">+</button>
+                <button id="subtractOperator" class="operator">-</button>
+                <button id="divideOperator" class="operator"> &divide;</button>
+                <button id="multiplyOperator" class="operator">&times;</button>
+        </div>
+
+
     </div>
 </body>
 </html>
