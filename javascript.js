@@ -38,62 +38,71 @@ display.textContent = [displayResult.join(" ")];
 
 const decimalPoint = document.querySelector("#decimalPoint");
 const numbers = document.querySelectorAll(".number");
+const oneToNine = document.querySelectorAll(".oneToNine");
+const lastObject = () => result[result.length - 1];
+
+
+function addObjectArray(e) {
+    if (Object.keys(lastObject()).includes("operator")) 
+        {
+            result.push( {number: ""} );
+            displayResult.push( [] );
+            display.textContent = [displayResult.join(" ")];
+        }
+}
+
+function isDecimalPoint(e) {
+    if (e.target.id == "decimalPoint" && 
+    lastObject().number.at(-1) !== "." &&
+    !lastObject().number.includes(".") &&
+    lastObject().number !== "")
+    {
+        lastObject().number += `${e.target.textContent}`;
+        displayResult[displayResult.length - 1] += e.target.textContent; 
+    }
+}
+
+function isOneToNine(e) {
+    if (result.length == 1 && 
+        lastObject().number.length == 1 &&
+        lastObject().number.at(0) === "0") 
+    {
+        result = [ {number: e.target.textContent} ];
+        displayResult = [ [e.target.textContent] ];
+    }
+        else if(e.target.classList.contains('oneToNine')  && 
+            lastObject().number.includes(".") ||
+
+            e.target.classList.contains('oneToNine') &&
+            lastObject().number.at(0) == "0" && 
+            lastObject().number.length !== 1 ||
+
+            e.target.classList.contains('oneToNine') &&
+            lastObject().number.at(0) !== "0"
+            ) 
+        {
+            lastObject().number += `${e.target.textContent}`;
+            displayResult[displayResult.length - 1] += e.target.textContent;
+        }
+}
+
+function isZero(e) {
+    if (e.target.id == "zero" &&
+    lastObject().number.includes(".") ||
+    e.target.id == "zero" && 
+    lastObject().number.at(0) !== "0") 
+    {
+        lastObject().number += `${e.target.textContent}`;
+        displayResult[displayResult.length - 1] += e.target.textContent;
+    }
+}
+
 numbers.forEach((number) => {
     number.addEventListener("click", (e) => {
-
-        // if last object includes operator key, add object and array to input
-        if (Object.keys(result[result.length-1]).includes("operator")) 
-            {
-                result.push( {number: ""} );
-                displayResult.push( [] );
-                display.textContent = [displayResult.join(" ")];
-            }
-
-        if (e.target.id == "decimalPoint" && 
-            result[result.length - 1].number.at(-1) !== "." &&
-            !result[result.length - 1].number.includes(".") &&
-            result[result.length - 1].number !== "")
-            {
-                result[result.length - 1].number += `${e.target.textContent}`;
-                displayResult[displayResult.length - 1] += e.target.textContent; 
-            }
-            
-
-            else if (result.length == 1 && 
-                    result[result.length - 1].number.length == 1 &&
-                    result[result.length - 1].number.at(0) === "0") 
-                {
-                    result = [ {number: e.target.textContent} ];
-                    displayResult = [ [e.target.textContent] ];
-                }
-
-            else if (e.target.id == "zero" &&
-                result[result.length - 1].number.includes(".") ||
-                e.target.id == "zero" && 
-                result[result.length - 1].number.at(0) !== "0") 
-                {
-                    result[result.length - 1].number += `${e.target.textContent}`;
-                    displayResult[displayResult.length - 1] += e.target.textContent;
-                }
-
-            else if(e.target.id !== "decimalPoint" && 
-                    e.target.id !== "zero" && 
-                    result[result.length - 1].number.includes(".") ||
-
-                    e.target.id !== "decimalPoint" && 
-                    e.target.id !== "zero" &&
-                    result[result.length - 1].number.at(0) == "0" && 
-                    result[result.length - 1].number.length !== 1 ||
-
-                    e.target.id !== "decimalPoint" && 
-                    e.target.id !== "zero" &&
-                    result[result.length - 1].number.at(0) !== "0"
-                    ) 
-                {
-                    result[result.length - 1].number += `${e.target.textContent}`;
-                    displayResult[displayResult.length - 1] += e.target.textContent;
-                }
-
+        addObjectArray(e);
+        isDecimalPoint(e);
+        isOneToNine(e);
+        isZero(e);
     display.textContent = [displayResult.join(" ")];
     displaySecond.textContent = ""
     });
@@ -102,7 +111,7 @@ numbers.forEach((number) => {
 const operators = document.querySelectorAll(".operator");
 operators.forEach((operator) => {
     operator.addEventListener("click", (e) => {
-        if (Object.keys(result[result.length-1]) == "operator"){
+        if (Object.keys(lastObject()) == "operator"){
 
         }
         else {
@@ -175,24 +184,24 @@ c.addEventListener("click", (e) => {
 
 
 function clearEntry(e){
-    const lastObject = result[result.length - 1];
-    const lastKey = Object.keys(lastObject).at(-1)
-    const lastArray = displayResult.length - 1;
+    const lastKey = () => Object.keys(lastObject()).at(-1)
+    const lastArray = () => displayResult.length - 1;
 
-    if (displayResult[lastArray] == "") {
-        displayResult.pop()
+    if (displayResult[lastArray()] == "" && Object.values(lastObject()).at(-1) == "") {
+        displayResult.pop();
+        result.pop();
     };
-    if (lastKey == "operator") 
+
+    if (lastKey() == "operator") 
         {
-            result.pop(lastObject);
+            result.pop();
             displayResult.pop();
         }
-        else if (lastKey == "number") {
-                const lastArray = displayResult.length - 1;
-                lastObject[lastKey] = lastObject[lastKey].slice(0, -1)
-                displayResult[lastArray] = displayResult[lastArray].slice(0 , -1)
+            else if (lastKey() == "number") {
+                lastObject()[lastKey()] = lastObject()[lastKey()].slice(0, -1)
+                displayResult[lastArray()] = displayResult[lastArray()].slice(0 , -1)
             };
-    if (result.length == 1 && Object.values(lastObject).at(-1) == "") {
+    if (result.length == 1 && Object.values(lastObject()).at(-1) == "") {
         displayResult = [ [0] ];
         result = [ {number: "0"} ];
     }
